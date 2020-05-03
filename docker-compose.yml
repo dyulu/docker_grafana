@@ -1,0 +1,41 @@
+version: "3"
+services:
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - grafana_network
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - grafana_config:/etc/grafana
+
+  graphite:
+    image: graphiteapp/graphite-statsd
+    container_name: graphite
+    restart: always
+    ports:
+      - 80:80
+      - 2003-2004:2003-2004
+      - 2023-2024:2023-2024
+      - 8125:8125/udp
+      - 8126:8126
+    networks:
+      - grafana_network
+    volumes:
+      - graphite_config:/opt/graphite/conf
+      - graphite_data:/opt/graphite/storage
+      - statsd_config:/opt/statsd/config
+
+networks:
+  grafana_network:
+
+volumes:
+  grafana_data:
+  grafana_config:
+  graphite_config:
+  graphite_data:
+  statsd_config:
+
